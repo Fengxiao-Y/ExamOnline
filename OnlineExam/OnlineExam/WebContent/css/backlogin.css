@@ -1,0 +1,77 @@
+*{
+	margin:0px;
+	padding:0px;
+}
+
+body{
+	background-image: url(../img/摄图网_501004811.jpg);
+	background-size: 100%;
+	position: relative;
+}
+
+
+
+#myform{
+	width:480px;
+	height:420px;
+	position: absolute;   
+            top:70px; 
+           left:35%;   
+
+}
+
+
+
+table tr input{
+	width:400px;
+	height:60px;
+}
+
+
+input[type="text"],
+input[type="password"]
+{
+	margin-top: 10px;
+	font-size: 1.2em;
+}
+
+
+table{
+	position:relative;
+	top:70px;
+}
+input[type="button"] {border:none;background:#17c05b;cursor:pointer;
+					width:403px;font-size:1.2em;color:white;
+					letter-spacing: 3px;margin-top:20px;
+}
+
+h1{
+	
+	position: relative;
+	top:20px;
+	left:-10px;
+	text-align: center;
+	font-size: 45px;
+	color:orangered;
+	font-family:微软雅黑;
+}
+
+
+a{
+	text-decoration: none;
+}
+
+a:hover{
+	color:red;
+}
+.father{
+	position: relative;
+}
+
+
+p{
+	position: fixed;
+	top:550px;
+	left:30%;
+	color:black;
+}

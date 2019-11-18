@@ -1,0 +1,279 @@
+
+		body{
+			width: 100%;
+			overflow-x: hidden;
+		}	
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	#container{
+		width: 100%;
+		height:1300px;
+		
+		
+	}
+	
+	.top{
+		width:100%;
+		height:57px;
+		background-color:black;
+		float:left;
+		
+	}
+	
+	.center{
+		width:100%;
+		height:600px;
+		
+	
+	}
+	
+	.bottom{
+		width:100%;
+		height:607px;
+		background-color: white;
+	
+	}
+	
+	.footer{
+		width:100%;
+		height:93px;
+		text-align: center;
+		line-height:45px;
+	
+	}
+	
+	#im{
+		width:100%;
+		height:600px;
+	
+	
+	}
+	
+	#myform{
+		width:300px;
+		height:400px;
+		position: absolute;
+		right: 30px;
+		top:90px;
+		border-radius: 10px;
+		border:1px solid purple;
+		background-color: white;
+	
+		
+	}
+	
+	.footertitle{
+		position: relative;
+		top:20px;
+	}
+	
+	a{
+		color:grey;
+	}
+	
+	#userlogin{
+		position: relative;
+		left:20px;
+		top:120px;
+		
+	
+	}
+	
+	.formcontent{
+		margin: 30px 5px;
+		position: relative;
+		top:-90px;
+	}
+	
+	input{
+		width:251px;
+		height:30px;
+		font-size:1.2em;
+		color:black;
+	}
+	
+	#special{
+		background-color:red;
+		color:white;
+		font-size: 1.2em;
+		width:255px;
+		height:35px ;
+		text-align: center;
+		letter-spacing: 3px;
+		
+	}
+	
+	h1{
+		position: relative;
+		top:50px;
+		left:20px;
+		color:purple;
+		font-family:宋体;
+	}
+	
+	.bottom_left{
+		width:33.3%;
+		height:607px;
+		background-color: aliceblue;
+		float: left;
+	}
+	
+	.bottom_center{
+		width:33.3%;
+		height:607px;
+		background-color: antiquewhite;
+		float: left;
+	}
+	
+	.bottom_right{
+		width:33.3%;
+		height:607px;
+		background-color:paleturquoise;
+		float: left;
+	}
+	
+	.img2{
+		width:286px;
+		height:290px;
+	}
+	
+	#logo{
+		width:90px;
+		height:80px;
+		background-image: url(../img/logo.png);
+		background-repeat: no-repeat;
+		background-position: 50px 15px ;
+		float: left;
+	}
+	
+	dl{
+		position: relative;
+		top:120px;
+		left:50px
+	}
+	
+	
+	
+	.describle{
+		position: relative;
+		top:70px;
+		left:1px;
+	}
+	
+	#fogetpwd{
+		position: relative;
+		left:95px;
+		top:-30px;
+		color:gray;
+		text-decoration: none;
+		font-size: 0.8em;
+	}
+	
+	
+	.first{
+		list-style: none;
+		
+	}
+
+	.first li{
+		position: relative;
+		top:13px;
+		margin-left: 5px;
+	}
+	#yidu{
+		font-family:Georgia;
+		font-style:italic;
+		color:white;
+		font-size: 1.5em;
+		
+	}
+	
+	.second{
+		list-style: none;
+		color:white;
+		
+		
+	}
+	
+	table{
+		
+		float:right;
+	} 
+	
+	td{
+		margin-left: 15px;
+		position: relative;
+		top:-15px;
+		
+	}
+	
+	
+	
+	table tr td img{
+		width:40px;
+		height:30px;
+		
+	}
+	
+	.nav{
+		font-size: 14px;
+		color:white;
+		text-decoration: none;
+	}
+	
+	.nav:hover{
+		color: red;
+	}
+	
+	#examsystem{
+		margin-left: 5px;
+		letter-spacing: 3px;
+	}
+
+
+h3{
+	color:black;
+	font-family:微软雅黑;
+	position: relative;
+	top:40px;
+	left:25px;
+}
+
+/*去除submit的边框线*/	
+input[type="submit"] {border:none;background:none;cursor:pointer;}
+
+#fogetpwd:hover{
+   color:red;
+	
+}
+
+#warning{
+	font-size: 10px;
+}
+
+
+
+.register{
+	color:blue;
+	position: relative;
+	left:185px;
+	top:18px;
+	font-size:14px;
+	text-decoration: none;
+	
+}
+
+
+#moremethod{
+	position: relative;
+	top:-100px;
+	left:6px;
+	font-size: 0.8em;
+}
+
+
+#moremethod:hover{
+	color:red;
+}

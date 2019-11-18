@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>试题表操作</title>
+	<!-- 导入easyui样式 -->
+	<link rel="stylesheet" type="text/css" href="../easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="../easyui/themes/icon.css" /> 
+	<!-- 导入easyui相关的js库文件(函数) -->
+	<script type="text/javascript" src="../easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../easyui/locale/easyui-lang-zh_CN.js"></script>
+	
+	<!-- 自定义的样式 -->
+	<style type="text/css">
+		#mytable{
+			width:100%;
+			border-collapse:collapse;
+		}
+		#mytable td{
+			font-size:12px;
+		}
+		.tdalign{
+			text-align: right;
+			width:40%;
+		}
+	</style>
+	<!-- 脚本代码 -->
+	<script type="text/javascript">
+
+		$(function(){
+			/* 对表格对象加载datagrid方法 */
+			$("#dg").datagrid({
+				idFiled:'testid',//主键字段
+				toolbar:'#toolbar',//绑定工具栏
+				fit:true,//填充容器
+				url:"http://localhost:8080/OnlineExam/TopicbankServlet?method=findAll", //数据源路径
+				nowrap:true,
+				fitColumns:true,//自动填充列
+				rownumbers:true,//增加一个行号列
+				loadMsg:'正在玩命加载，请稍候....',//在页面显示数据之前，显示的文本
+				//冻结列：让某些列永远显示在页面中
+				frozenColumns:[[{
+					'field':'checkbox',//复选框列
+					'checkbox':true
+				}]],
+				//设置datagrid数据表格对象中的数据列
+				columns:[[{
+					field:'testid',//字段名
+					title:'试题编号',//datagrid数据表格中显示的列的标题
+					align:'center',//数据显示的位置:居中
+					width:'50' //数据列的宽度
+				},{
+					field:'testtype',
+					title:'试题类型',
+					align:'center',
+					width:'50'
+				},
+				{field:'aresult',title:'A选项',align:'center',width:'100'},
+				{
+					field:'bresult',
+					title:'B选项',
+					align:'center',
+					width:'100'
+				},{
+					field:'cresult',
+					title:'C选项',
+					align:'center',
+					width:'100'
+				},{
+					field:'dresult',
+					title:'D选项',
+					align:'center',
+					width:'100'
+				},{
+						field:'eresult',
+						title:'E选项',
+						align:'center',
+						width:'40'
+				},{
+					field:'fresult',
+					title:'F选项',
+					align:'center',
+					width:'40'
+				},{
+					field:'rightsult',
+					title:'正确答案',
+					align:'center',
+					width:'80'
+				},{
+					field:'content',
+					title:'试题内容',
+					align:'center',
+					width:'200'
+				},{
+					field:'grade',
+					title:'难度等级',
+					align:'center',
+					width:'60'
+				},{
+					field:'falsely',
+					title:'试题错误率',
+					align:'center',
+					width:'60'
+				},{
+					field:'cname',
+					title:'课程名称',
+					align:'center',
+					width:'120'
+				},{
+					field:'stagename',
+					title:'所属阶段',
+					align:'center',
+					width:'80'
+				}]],
+				//datagrid底部是否显示分页工具栏
+				pagination:true,
+				//底部分页工具栏中，页面记录数列表
+				pageList:[5,10,15,20],
+				//分页工具栏显示位置
+				pagePosition:'bottom',
+				//当前页面默认大小(每页显示多少行数据)
+				pageSize:5
+			});
+			
+			//点击工具栏上"新增试题"按钮操作
+			$("#topicbankadd").click(function(){
+				
+				$("#topicbankdialog").dialog({
+					title:"新增内容",
+					iconCls:"icon-add"
+				});
+				$("#ok").linkbutton({
+					text:"确定",
+					iconCls:"icon-add"
+				});
+				//重置 表单数据
+				$("#topicbankform").form("reset");
+
+				$("#trfalse").css("display","none");
+				$("#trstname").css("display","none");
+				$("#trtestid").css("display","none");
+				
+				//主键隐藏（对话框之前）
+				//$("#testid").css("display","none");
+				//主键只读
+				$("#testid").attr("readonly","readonly");
+				//解除冻结
+				//$("#testid").removeAttr("readonly");
+				
+				$.ajax({
+					type:"post",
+					url:"http://localhost:8080/OnlineExam/Getcourse",
+					async:true,
+					dataType:"json",
+					success:function(data){
+						
+						console.log(data);
+						console.log(data.length);
+						var htm="";
+						$("#cname").html("");
+						for(var i=0;i<data.length;i++){
+							htm+="<option value='"+data[i].cname+"'>"+data[i].cname+"</option>"
+						}
+						
+						$("#cname").append(htm);
+						
+					}
+				});
+				
+				//打开对话框
+				$("#topicbankdialog").dialog("open");
+
+				
+				
+			});
+			
+			//新增/修改对话框中的"确定"按钮操作
+			$("#ok").click(function(){
+				
+				//获得按钮上的文字，确定它是增加还是修改
+				var btnText=$(this).text();
+				//判断它是“确定”还是"修改"按钮
+				if(btnText.trim()=="确定"){ //新增
+					//判断用户输入的数据是否通过验证
+					if($("#topicbankform").form("validate")){
+						//使用ajax方式提交数据到控制层
+						$.ajax({
+							type:"post",
+							url:"http://localhost:8080/OnlineExam/TopicbankServlet?method=add",
+							async:true,
+							data:$("#topicbankform").serialize()+" ",//表单数据序列化
+							dataType:"text",
+							success:function(message){
+								//判断服务器端返回的文本内容
+								if(message.trim()=="success"){
+									//右下角显示一个信息提示
+									$.messager.show({
+										title:"提示",
+										msg:"内容添加成功!"
+									});
+									
+									//添加成功后，把添加界面数据清空
+									$("#topicbankform").form("reset");
+									//把对话框关闭
+									$("#topicbankdialog").dialog("close");
+									//datagrid数据表格重新加载
+									$("#dg").datagrid("reload");
+								}else{
+									//右下角显示一个信息提示
+									$.messager.show({
+										title:"提示",
+										msg:"试题添加失败!"
+									});
+								}
+							}
+						});
+					}else{
+						//右下角显示一个信息提示
+						$.messager.show({
+							title:"提示",
+							msg:"数据验证没有通过，不能保存试题信息..."
+						});
+					}
+				}else if(btnText.trim()=="修改"){ //修改操作
+					//对数据进行修改
+					//判断表单数据是否通过验证
+					if($("#topicbankform").form("validate")){
+						//$.post(url,data,callback,type)
+						$.post("http://localhost:8080/OnlineExam/TopicbankServlet?method=update",
+						$("#topicbankform").serialize(),
+						function(message){
+							//判断服务器端返回的字符串内容:修改成功success,修改失败failure
+							if(message.trim()=="success"){
+								//右下角显示一个信息提示
+								$.messager.show({
+									title:"提示",
+									msg:"试题修改成功!"
+								});
+								//添加成功后，把修改界面数据清空
+								$("#topicbankform").form("reset");
+								//把对话框关闭
+								$("#topicbankdialog").dialog("close");
+								//datagrid数据表格重新加载
+								$("#dg").datagrid("reload");
+							}else{
+								//右下角显示一个信息提示
+								$.messager.show({
+									title:"提示",
+									msg:"试题修改失败!"
+								});
+								//把对话框关闭
+								$("#announcedialog").dialog("close");
+							}
+						},
+						"text");
+					}
+				}
+			});
+			
+			//点击工具栏上的修改试题topicbankdialog
+			$("#topicbankupdate").click(function(){
+				//获取datagrid中选择的数据行
+				var array=$("#dg").datagrid("getSelections");
+				//判断选择的数据行是否为多行或未选择数据行
+				if(array.length==0 || array.length>1){
+					//弹出提示信息
+					$.messager.show({
+						title:"提示信息",
+						msg:"请选择一行数据进行修改...."
+					});
+				}else{
+					//客户正确选择了一行数据
+					//打开增加对话框，修改对话框的标题及图标，按钮文字
+					$("#topicbankdialog").dialog({
+						title:"修改试题",
+						iconCls:"icon-edit"
+					});
+					
+					$.ajax({
+						type:"post",
+						url:"http://localhost:8080/OnlineExam/Getcourse",
+						async:true,
+						dataType:"json",
+						success:function(data){
+							
+							console.log(data);
+							console.log(data.length);
+							var htm="";
+							$("#cname").html("");
+							for(var i=0;i<data.length;i++){
+								htm+="<option value='"+data[i].cname+"'>"+data[i].cname+"</option>"
+							}
+							
+							$("#cname").append(htm);
+							
+						}
+					});
+					
+					
+					//(打开对话框之前)主键冻结，不能修改
+					$("#testid").attr("readonly","readonly");
+					//显示隐藏
+					$("#testid").css("display","block");
+					//打开对话框
+					$("#trfalse").css("display","none");
+					$("#topicbankdialog").dialog("open");
+					
+					
+					
+					//把要修改的数据行（array[0]行）加载到修改表单中。
+					$("#topicbankform").form("load",{
+						testid:array[0].testid,
+						testtype:array[0].testtype,
+						aresult:array[0].aresult,
+						bresult:array[0].bresult,
+						cresult:array[0].cresult,
+						dresult:array[0].dresult,
+						eresult:array[0].eresult,
+						fresult:array[0].fresult,
+						rightsult:array[0].rightsult,
+						
+						content:array[0].content,
+						grade:array[0].grade,
+						falsely:array[0].falsely,
+						cname:array[0].cname,
+						
+						
+					});
+					
+					//设置表单按钮上的文字
+					$("#ok").linkbutton({
+						text:"修改",
+						iconCls:"icon-edit"
+					});
+				}
+			});
+			
+			//点击工具栏上的删除试题
+			$("#topicbankdelete").click(function(){
+				//获取datagrid中的选择的数据行
+				var array=$("#dg").datagrid("getSelections");
+				//判断选择的行数是否为0
+				if(array.length==0){
+					//弹出提示信息
+					$.messager.show({
+						title:"提示信息",
+						msg:"请选择至少一行数据进行删除...."
+					});
+				}else{
+					//由于删除的行数会多于1行，将多个删除的试题编号进行拼接（以,逗号分隔）方式传递到服务器端，
+					//服务器端再使用循环调用删除方式进行删除。
+					$.messager.confirm("确认","您真的想要删除试题数据吗?",function(rows){
+						//拼接编号字符串
+						var announceNoStr="";
+						//使用循环拼接
+						for(var i=0;i<array.length;i++){
+							announceNoStr=announceNoStr+array[i].testid+",";
+						}
+						//将最后一个","去掉
+						announceNoStr=announceNoStr.substring(0,announceNoStr.length-1);
+						//使用ajax调用后台的处理代码删除数据
+						$.post("http://localhost:8080/OnlineExam/TopicbankServlet?method=delete",
+						{'testidNoStr':announceNoStr},function(message){
+							//判断删除是否成功:
+							if(message.trim()=="success"){
+								//右下角显示一个信息提示
+								$.messager.show({
+									title:"提示",
+									msg:"试题成功删除!"
+								});
+								
+								//datagrid数据表格重新加载
+								$("#dg").datagrid("reload");
+							}else{
+								//右下角显示一个信息提示
+								$.messager.show({
+									title:"提示",
+									msg:"删除试题失败!"
+								});
+							}
+						},"text");
+					});
+				}
+			});
+			
+			$("#cancel").click(function(){
+				//点击取消后,只需要把对话框关闭
+				$("#topicbankdialog").dialog("close");
+					
+				//datagrid数据表格重新加载
+				//$("#dg").datagrid("reload");
+				
+				//点击取消后，把界面数据清空
+				//$("#empform").form("reset");
+				
+			});
+			
+			//搜索层中的搜索按钮事件
+			$("#search").click(function(){
+				var rows=$("#dg").datagrid("options").pageSize;
+				var page=$("#dg").datagrid("options").pageNumber;
+				$.ajax({
+					type:"post",
+					url:"http://localhost:8080/OnlineExam/TopicbankServlet?method=findAll&rows="+rows+"&page="+page,
+					async:true,
+					data:$("#searchform").serialize(),//表单数据序列化
+					dataType:"json",
+					success:function(message){
+						$("#dg").datagrid("loadData",message);
+					}
+				});
+			});
+			
+		});
+	</script>
+	</head>
+	<body style="width:100%;height:100%;">
+	<!-- 显示数据的表格 -->
+				<table id="dg">
+					
+				</table>
+		<div class="easyui-layout" style="height:540px;">
+		
+			<div data-options="region:'center',title:'试题信息',split:false" style="height:100%;">
+				
+				
+				<!-- 菜单操作工具栏 -->
+				<div id="toolbar">
+				<!-- 新增试题 -->
+				<a class="easyui-linkbutton" iconCls="icon-add" plain="true" id="topicbankadd">新增试题</a>
+				<!-- 修改试题 -->
+				<a class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="topicbankupdate">修改试题</a>
+				<!-- 删除试题 -->
+				<a class="easyui-linkbutton" iconCls="icon-remove" plain="true" id="topicbankdelete">删除试题</a>
+				<form id="searchform" action="#" method="post">
+					<table style="margin-top: 20px;">
+						<tr>
+							<td>
+								试题类型：
+								<input type="text" name="testtype"/>
+							</td>
+							<td>
+								试题内容：
+								<input type="text" name="content" />
+							</td>
+							<td>
+								课程名称：
+								<input type="text" name="cname" />
+							</td>
+							<td>
+								所属阶段：
+								<input type="text" name="stagename" />
+							</td>
+							<td>
+								<a class="easyui-linkbutton" iconCls="icon-search" plain="false" id="search">搜索试题</a>
+							</td>
+						</tr>
+					</table>
+				</form>
+				</div>
+				
+			</div>
+		</div>
+
+		<!-- 新增/修改试题对话框 -->
+		<div id="topicbankdialog" class="easyui-dialog" title="新增试题" style="width:400px;height:300px;"
+			 data-options="iconCls:'icon-add',resizable:false,modal:true" closed="true">
+			<form id="topicbankform">
+				<!-- 采用表格布局  -->
+				<table id="mytable">
+					<tr id="trtestid">
+						<td class="tdalign">试题编号:</td>
+						<td><input type="text"  name="testid"  id="testid" class="easyui-validatebox" data-options="required:false,missingMessage:'请输入试题编号'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">试题类型:</td>
+						<td><input type="text" name="testtype" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入试题类型'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">A选项:</td>
+						<td><input type="text" name="aresult" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入A选项'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">B选项:</td>
+						<td><input  type="text"  name="bresult" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入B选项'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">C选项:</td>
+						<td><input type="text" name="cresult" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入C选项'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">D选项:</td>
+						<td><input type="text" name="dresult" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入D选项'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">E选项:</td>
+						<td><input type="text" name="eresult" class="easyui-validatebox" data-options="required:false,missingMessage:'请输入E选项'" value=" "></td>
+					</tr>
+					<tr>
+						<td class="tdalign">F选项:</td>
+						<td><input type="text" name="fresult" class="easyui-validatebox" data-options="required:false,missingMessage:'请输入F选项'" value=" "></td>
+					</tr>
+					<tr>
+						<td class="tdalign">正确选项:</td>
+						<td><input type="text" name="rightsult" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入正确选项'"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">试题内容:</td>
+						<td><textarea type="text" rows="5" cols="20" name="content" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入试题内容'"></textarea></td>
+					</tr>
+					<tr>
+						<td class="tdalign">难度等级:</td>
+						
+						<td><select name="grade" class="easyui-validatebox" data-options="required:true">
+								<option>--请选择等级--</option>
+								<option value="简单">简单</option>
+								<option value="中等">中等</option>
+								<option value="困难">困难</option>
+								
+							</select>
+						</td>
+					</tr>
+					<tr id="trfalse">
+						<td class="tdalign">错误率:</td>
+						<td><input type="text" name="falsely" class="easyui-validatebox" data-options="required:true,missingMessage:'请输入课程名称'" value="0"></td>
+					</tr>
+					<tr>
+						<td class="tdalign">课程名称:</td>
+						<td><select name="cname" id="cname">
+							
+						</select></td>
+					</tr>
+					
+					<tr>
+						<td colspan="2" align="center">
+							<a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-add'">确定</a>
+							<a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>

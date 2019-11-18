@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<META HTTP-EQUIV="pragma" CONTENT="no-cache">
+		<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache,must-revalidate">
+		<META HTTP-EQUIV="expires" CONTENT="0">
+		<title>用户登录</title>
+	<link rel="stylesheet" type="text/css" href="../css/loginpage.css"/ >
+	<script type="text/javascript" src="../easyui/jquery.min.js" ></script>
+        <script type="text/javascript" src="../easyui/jquery.easyui.min.js" ></script>
+        <script type="text/javascript" src="../easyui/locale/easyui-lang-zh_CN.js"></script>
+        <link type="text/css" rel="stylesheet" href="../easyui/themes/icon.css" />
+		<link type="text/css" rel="stylesheet" href="../easyui/themes/gray/easyui.css" />
+	</head>
+	
+	
+	<body>
+		<div id="container">
+			<div class="top">
+				<p id="logo">
+				</p>
+				<ul class="first">
+					<li><span id="yidu">一度大学</span>
+						<span style="color:antiquewhite;" id="examsystem">在线考试系统</span>
+					</li>		
+				</ul>
+				<table>
+					<tr>
+						<td><img src="../img/i_login.png"/></td>
+						<td><a class="nav" href="#">申请管理员</a></td>
+						<td><img src="../img/i_home.png"/></td>
+						<td><a class="nav" href="#">一度站点</a></td>
+						<td><img src="../img/i4.jpg"/></td>	
+						<td><a class="nav" href="http://www.baidu.com">帮助</a></td>
+					</tr>
+				</table>
+			</div>
+			<div class="center">
+				<img id="im" src="../img/st_1.jpg" />
+				<div id="myform">
+					<h3>用户登录</h3>
+					<!-- <a class="register" href="#">注册新账号</a> -->
+					<form id="userlogin">
+						<p class="formcontent"><input type="text" name="unumber" placeholder="请输入用户名" id="unumber"/></p>
+						<font id="warning" style="color:red"></font>
+						<p class="formcontent"><input type="password" name="passwords" placeholder="密码" id="passwords" /></p>
+						<p class="formcontent"><input id="special" type="button" value="登录"/>	</p>
+						<!-- <a id="moremethod" href="#">点击更多登录方式</a>
+						
+						<a id="fogetpwd" href="#">忘记密码&nbsp;？</a> -->
+					</form>
+				</div>
+			</div>
+				<div class="bottom">
+					<div class="bottom_left">
+						<dl>
+							<dt><img src="../img/n6.png" class="img2"/></dt>
+							<dd><h3>考试系统</h3></dd>
+							<dd class="describle">无限可能的考试系统，以极稳定的<br>
+								性能组织高效的考试，拥有难以置信的统计分析
+							</dd>
+						</dl>
+					</div>
+					<div class="bottom_center">
+						<dl>
+							<dt><img src="../img/n5.png" class="img2"/></dt>
+							<dd><h3>学练系统</h3></dd>
+							<dd class="describle">由您自控并提供清晰的学习过程,<br>
+								智能分析和测量，给您最具针对性的学练过程。
+							</dd>
+						</dl>
+					</div>
+					<div class="bottom_right">
+						<dl>
+							<dt><img src="../img/n15.png" class="img2"/></dt>
+							<dd><h3>记录分析</h3></dd>
+							<dd class="describle">智能并忠诚地记录您的考试数据,<br>
+								清晰和完整地展现给您，让您更了解自己。
+							</dd>
+						</dl>
+					</div>
+				</div>
+			<div class="footer">
+				<p  class="footertitle" style="color:grey">COPYRIGHT 2007-2019 YIDUEDUCATION ALL RIGHTS RESERVERD</p>
+				<p><a>加入平台 </a>一度教育 <a>湘ICP备12003739号</a> 系统版本3.0.0.233</p>
+			</div>
+		</div>
+	</body>	
+		<script>
+			$(function(){
+				var b=$("#unumber");
+				var c=$("#special");
+				
+				c.click(function(){
+					var uPattern = /^[0-9]\d{0,8}$/;
+					b=b.val();
+					if(b==null||b==""){
+						alert("用户名不能为空")
+					}else{
+						var flag=uPattern.test(b);
+						if(flag){
+							var d=$("#passwords").val();
+							if(d==null||d==""){
+								alert("密码不能为空")
+							}else{
+								$.ajax({
+									type:"post",
+									url:"http://localhost:8080/OnlineExam/Popedomservlet?method=login",
+									async:true,
+									data:$("#userlogin").serialize(),
+									success:function(success){
+										if(success=="error"){
+											alert("密码错误");
+											
+											window.location.reload();
+										}else if(success=="notfund"){
+											alert("用户未找到");
+											window.location.reload();
+										}else{
+											$(location).attr("href","http://localhost:8080/OnlineExam/back/index.jsp");
+										}
+									}
+								});
+							}
+						}else{
+								alert("用户名格式不正确!");
+							}
+					}
+					
+					
+					
+						
+				});
+			});
+				
+					
+			
+			
+		</script>
+		
+</html>

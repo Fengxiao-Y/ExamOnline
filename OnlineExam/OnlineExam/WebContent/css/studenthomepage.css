@@ -1,0 +1,127 @@
+ *{
+margin:0px;
+padding:0px; 
+ 
+ }
+ 
+  img{
+	width:100%;
+	height:100%;
+}
+
+#email{
+	float: right;
+}
+
+
+.last{
+	font-size:12px;
+	float:right;
+	line-height: 20px;
+}
+ 
+
+.layui-carousel{
+	float:left;
+}
+
+.aboutexam{
+	width:100%;
+	height:40px;
+	background-color:blue;
+	color:white;
+	line-height:40px;
+}
+
+.layui-body{
+	border:1;
+}
+
+.schoolnotice{
+	font-size:1.2em;
+	float:left;
+	line-height:40px;
+}
+
+
+.more{
+	color:white;
+	float:right;
+}
+
+
+
+
+.news:hover{
+	
+	color:blue;
+	
+	
+} 
+
+
+/* .ullist{
+	background-image: url(../img/摄图网_500392094.jpg);
+}
+ */
+
+
+.ul li{
+	width:65px;
+	height:30px;
+	border-radius:3px;
+	text-align:center;
+	color:black;
+	line-height:30px;
+	float:left;
+
+	
+}
+
+.cel{
+	background-color:blue;
+}
+.cell{
+	background:gray;
+	margin-left:5px;
+}
+
+.cell:hover{
+	background-color:blue;
+}
+ hr{
+	position:relative;
+	top:1px;
+	background-color:blue;
+	height:2px;
+
+} 
+
+.smallimg{
+	float:left;
+	width:19%;
+	height:430px;
+background-color:blue;
+margin-left:10px;
+margin-top:10px;
+	
+}
+
+.small{
+	float:left;
+	width:19%;
+	height:430px;
+background-color:blue;
+margin-top:10px;
+}
+
+
+
+
+
+#shefujun{
+	color:black;
+	float:right;
+	line-height:30px
+	
+}
